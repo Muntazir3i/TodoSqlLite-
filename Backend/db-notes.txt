@@ -1,0 +1,77 @@
+/*Creates a connection to a SQLite database.
+
+ File Name: todo.db
+
+ If todo.db exists → it opens it.
+
+ If todo.db doesn't exist → it creates it automatically.
+
+ const db = ...
+
+ db is now your live database connection object.
+
+ You will use db to send SQL commands like create tables, insert todos, fetch todos, etc.*/
+
+
+
+
+ /*
+ 
+  
+db.prepare(...)
+prepare():
+
+Tells SQLite:
+
+"Get ready to run this SQL command."
+
+It parses the SQL string.
+
+It creates an internal statement (but doesn't execute it yet).
+
+.prepare() = Load the gun.
+
+
+SQL inside prepare:
+CREATE TABLE IF NOT EXISTS todos (...)
+CREATE TABLE:
+
+Try to create a new table in the database.
+
+IF NOT EXISTS:
+
+If the todos table already exists, don't throw an error — just do nothing.
+
+todos:
+
+Name of the table you are making.
+
+
+
+Columns inside todos:
+
+Column	Type	Meaning
+id	INTEGER PRIMARY KEY AUTOINCREMENT	- Unique ID for each todo item.
+- Increments automatically (1,2,3,4...).
+text	TEXT NOT NULL	- The actual todo content (like "Buy milk").
+- Cannot be empty.
+done	BOOLEAN NOT NULL DEFAULT 0	- True/False value.
+- 0 means not done.
+- By default, todos are not completed when added.
+
+
+
+
+.run()
+run():
+
+Actually executes the prepared statement.
+
+.run() = Pull the trigger on the loaded SQL gun.
+
+No return data — you just tell the database:
+
+"Make sure the table is ready."
+
+
+*/
