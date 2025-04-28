@@ -1,33 +1,72 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [todos, setTodos] = useState([]);
+  const [text, setText] = useState('');
+
+  const API = 'http://localhost:5000';
+
+
+  useEffect(() => {
+      fetchTodos();
+  }, []);
+
+
+
+  const fetchTodos = async () => {
+      const res = await axios.get(`${API}/todos`);
+      setTodos(res.data);
+      console.log(res);
+  };
+
+  const addTodo = async () => {
+      if (text.trim() === '') return;
+      await axios.post(`${API}/todos`, { text });
+      setText('');
+      fetchTodos();
+  };
+
+  const toggleTodo = async (id) => {
+      await axios.put(`${API}/todos/${id}`);
+      fetchTodos();
+  };
+
+  const deleteTodo = async (id) => {
+      await axios.delete(`${API}/todos/${id}`);
+      fetchTodos();
+  };
+  
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+    <div style={{ padding: 20 }}>
+            <h1>Todo List</h1>
+            <input 
+                value={text}
+                onChange={e => setText(e.target.value)}
+                placeholder="New Todo"
+            />
+            <button onClick={addTodo}>Add</button>
+
+            <ul>
+                {todos.map(todo => (
+                    <li key={todo.id}>
+                        <span 
+                            style={{ 
+                                textDecoration: todo.done ? 'line-through' : 'none', 
+                                cursor: 'pointer' 
+                            }}
+                            onClick={() => toggleTodo(todo.id)}
+                        >
+                            {todo.text}
+                        </span>
+                        <button onClick={() => deleteTodo(todo.id)} style={{ marginLeft: 10 }}>❌</button>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    
     </>
   )
 }
